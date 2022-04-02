@@ -160,6 +160,62 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		}
 	}
 
+	@Override
+	public List <Film> findFilmByKeyword(String keyWord) {
+		
+		List <Film> films = new ArrayList<>();
+		
+		Film film;
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, password);
+
+			String sql = "SELECT description, title from film WHERE title LIKE '%the%' AND description LIKE '%the%';";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, "%" + keyWord + "%");
+			ps.setString(2, "%" + keyWord + "%");
+
+			ResultSet rs = ps.executeQuery();
+
+			{
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					String title = rs.getString(2);
+					String desc = rs.getString(3);
+					int year = rs.getInt(4);
+					int lang = rs.getInt(5);
+					int rentalDuration = rs.getInt(6);
+					double rentalRate = rs.getDouble(7);
+					int length = rs.getInt(8);
+					double replacementCost = rs.getDouble(9);
+					String rating = rs.getString(10);
+					String specialFeatures = rs.getString(11);
+					
+					List<Actor> actors =findActorsByFilmId(id);
+					
+				
+					
+					
+
+					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
+							rating, specialFeatures, actors);
+					
+					films.add(film);
+				}
+			}
+
+			rs.close();
+			ps.close();
+			conn.close();
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+
+		}
+
+		
+		
+		return films;
+	}
+
 
 	
 }
