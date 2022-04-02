@@ -47,12 +47,19 @@ public class FilmQueryApp {
 			Scanner kb = new Scanner(System.in);
 			if (input == 1) {
 				System.out.println("You have chosen to look up a film by ID\nPlease input a film ID: ");
+				
 				int filmId = kb.nextInt();
+				
 				Film film = db.findFilmById(filmId);
+				
 				if (film == null) {
+					
 					System.out.println("Film not found, try again.");
+					
 				}
+				
 				else {
+					
 					System.out.println(film);
 				}
 
@@ -82,6 +89,7 @@ public class FilmQueryApp {
 				System.out.println("Goodbye.");
 				menu = false;
 				sc.close();
+				kb.close();
 
 			}
 

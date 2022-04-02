@@ -36,6 +36,7 @@ public class Film {
 		this.rating = rating;
 		this.specialFeatures = specialFeatures;
 		this.actors = actors;
+		
 	}
 
 	public int getId() {
@@ -136,7 +137,7 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "Title: " + title + ", \nDescription: " + desc + ", \nRelease year: " + year + ", Rating: " + rating+" "+"Cast: "+actors;
+		return "Title: " + title + ", \nDescription: " + desc + ", \nRelease year: " + year + ", Rating: " + rating+" "+"\nCast: \n"+actors;
 	}
 
 	@Override

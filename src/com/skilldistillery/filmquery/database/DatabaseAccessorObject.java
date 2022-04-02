@@ -18,10 +18,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	private String user = "student";
 	private String password = "student";
 
+	
 	@Override
 	public Film findFilmById(int filmId) {
 
 		Film film = null;
+		
 
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
@@ -45,12 +47,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					double replacementCost = rs.getDouble(9);
 					String rating = rs.getString(10);
 					String specialFeatures = rs.getString(11);
-
+					
 					List<Actor> actors = findActorsByFilmId(filmId);
 
 					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
 							rating, specialFeatures, actors);
 
+					
 				}
 			}
 
@@ -61,7 +64,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			sqle.printStackTrace();
 
 		}
-
 		return film;
 
 	}
@@ -165,7 +167,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, password);
 
-			String sql = "SELECT* from film WHERE title LIKE ? AND description LIKE ?;";
+			String sql = "SELECT* from film WHERE title LIKE ? OR description LIKE ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyWord + "%");
 			ps.setString(2, "%" + keyWord + "%");
@@ -192,6 +194,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 							rating, specialFeatures, actors);
 
 					films.add(film);
+					
 				}
 			}
 
@@ -205,5 +208,37 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		return films;
 	}
+//	public String language(int langId) {
+//		
+//	String language = "";
+//
+//		
+//		
+//		try {
+//			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
+//
+//			String sql = "SELECT name FROM language WHERE id = ?;";
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.setInt(1, langId);
+//
+//			ResultSet rs = ps.executeQuery();
+//
+//			{
+//				if (rs.next()) {
+//					
+//				}
+//				language = (rs.getString(1));
+//			}
+//
+//			rs.close();
+//			ps.close();
+//			conn.close();
+//		} catch (SQLException sqle) {
+//			sqle.printStackTrace();
+//
+//		}
+//
+//		return language;
+//	}
 
 }
