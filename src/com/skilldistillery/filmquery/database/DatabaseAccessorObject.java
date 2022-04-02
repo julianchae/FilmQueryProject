@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.skilldistillery.filmquery.entities.Actor;
@@ -22,7 +23,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		Film film = null;
 
-
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
 
@@ -33,7 +33,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			ResultSet rs = ps.executeQuery();
 
 			{
-				while (rs.next()) {
+				if (rs.next()) {
 					int id = rs.getInt(1);
 					String title = rs.getString(2);
 					String desc = rs.getString(3);
@@ -45,9 +45,15 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					double replacementCost = rs.getDouble(9);
 					String rating = rs.getString(10);
 					String specialFeatures = rs.getString(11);
+					
+					List<Actor> actors = findActorsByFilmId(filmId);
+					
+				
+					
+					
 
 					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
-							rating, specialFeatures);
+							rating, specialFeatures, actors);
 
 				}
 			}
@@ -68,7 +74,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		Actor actor = null;
 
-
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
 
@@ -80,11 +85,10 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 			{
 				while (rs.next()) {
-					 int id= rs.getInt(1);
-					String firstName= rs.getString(2);
-					 String lastName= rs.getString(3);
+					int id = rs.getInt(1);
+					String firstName = rs.getString(2);
+					String lastName = rs.getString(3);
 					actor = new Actor(id, firstName, lastName);
-					
 
 				}
 			}
@@ -102,7 +106,47 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	public List<Actor> findActorsByFilmId(int filmId) {
-		return null;
+
+		List<Actor> actors = new ArrayList<>();
+
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
+
+			String sql = "SELECT a.id, a.first_name, a.last_name, film.id" + " FROM film_actor f"
+					+ " JOIN actor a ON f.actor_id = a.id" + " JOIN film ON f.film_id = film.id" + " WHERE film.id = ?";
+
+			// SELECT id, first_name, last_name FROM actor JOIN film_actor
+			// ON actor.id = film_actor.actor_id WHERE film_actor.film_id=?;
+
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			ps.setInt(1, filmId);
+
+			ResultSet rs = ps.executeQuery();
+
+			{
+				while (rs.next()) {
+
+					Actor actor = new Actor();
+					int id = rs.getInt(1);
+					String firstName = rs.getString(2);
+					String lastName = rs.getString(3);
+					actor = new Actor(id, firstName, lastName);
+					actors.add(actor);
+
+				}
+			}
+
+			rs.close();
+			ps.close();
+			conn.close();
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+
+		}
+
+		return actors;
+
 	}
 
 	static {
@@ -115,4 +159,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			throw new RuntimeException("Unable to load MySql driver class");
 		}
 	}
+
+
+	
 }
