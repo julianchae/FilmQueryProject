@@ -45,12 +45,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					double replacementCost = rs.getDouble(9);
 					String rating = rs.getString(10);
 					String specialFeatures = rs.getString(11);
-					
+
 					List<Actor> actors = findActorsByFilmId(filmId);
-					
-				
-					
-					
 
 					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
 							rating, specialFeatures, actors);
@@ -161,15 +157,15 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	}
 
 	@Override
-	public List <Film> findFilmByKeyword(String keyWord) {
-		
-		List <Film> films = new ArrayList<>();
-		
+	public List<Film> findFilmByKeyword(String keyWord) {
+
+		List<Film> films = new ArrayList<>();
+
 		Film film;
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, password);
 
-			String sql = "SELECT description, title from film WHERE title LIKE '%the%' AND description LIKE '%the%';";
+			String sql = "SELECT* from film WHERE title LIKE ? AND description LIKE ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyWord + "%");
 			ps.setString(2, "%" + keyWord + "%");
@@ -189,16 +185,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					double replacementCost = rs.getDouble(9);
 					String rating = rs.getString(10);
 					String specialFeatures = rs.getString(11);
-					
-					List<Actor> actors =findActorsByFilmId(id);
-					
-				
-					
-					
+
+					List<Actor> actors = findActorsByFilmId(id);
 
 					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
 							rating, specialFeatures, actors);
-					
+
 					films.add(film);
 				}
 			}
@@ -211,11 +203,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		}
 
-		
-		
 		return films;
 	}
 
-
-	
 }
