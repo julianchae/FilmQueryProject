@@ -20,10 +20,10 @@ public class FilmQueryApp {
 
 	private void test() {
 		Film film = db.findFilmById(34);
-//		Actor actor = db.findActorById(1);
+		Actor actor = db.findActorById(1);
 
 		System.out.println(film);
-//		System.out.println(actor);
+		System.out.println(actor);
 
 	}
 

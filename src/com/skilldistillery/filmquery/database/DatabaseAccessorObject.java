@@ -47,11 +47,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					double replacementCost = rs.getDouble(9);
 					String rating = rs.getString(10);
 					String specialFeatures = rs.getString(11);
+					String language = language(rs.getInt(5));
+					
 					
 					List<Actor> actors = findActorsByFilmId(filmId);
 
 					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
-							rating, specialFeatures, actors);
+							rating, specialFeatures, actors, language);
 
 					
 				}
@@ -187,11 +189,12 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 					double replacementCost = rs.getDouble(9);
 					String rating = rs.getString(10);
 					String specialFeatures = rs.getString(11);
+					String language = language(rs.getInt(5));
 
 					List<Actor> actors = findActorsByFilmId(id);
 
 					film = new Film(id, title, desc, year, lang, rentalDuration, rentalRate, length, replacementCost,
-							rating, specialFeatures, actors);
+							rating, specialFeatures, actors, language);
 
 					films.add(film);
 					
@@ -208,37 +211,37 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		return films;
 	}
-//	public String language(int langId) {
-//		
-//	String language = "";
-//
-//		
-//		
-//		try {
-//			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
-//
-//			String sql = "SELECT name FROM language WHERE id = ?;";
-//			PreparedStatement ps = conn.prepareStatement(sql);
-//			ps.setInt(1, langId);
-//
-//			ResultSet rs = ps.executeQuery();
-//
-//			{
-//				if (rs.next()) {
-//					
-//				}
-//				language = (rs.getString(1));
-//			}
-//
-//			rs.close();
-//			ps.close();
-//			conn.close();
-//		} catch (SQLException sqle) {
-//			sqle.printStackTrace();
-//
-//		}
-//
-//		return language;
-//	}
+	public String language(int langId) {
+		
+	String language = "";
+
+		
+		
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, password); // connects to database
+
+			String sql = "SELECT name FROM language WHERE id = ?;";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, langId);
+
+			ResultSet rs = ps.executeQuery();
+
+			{
+				if (rs.next()) {
+					
+				}
+				language = (rs.getString(1));
+			}
+
+			rs.close();
+			ps.close();
+			conn.close();
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+
+		}
+
+		return language;
+	}
 
 }
